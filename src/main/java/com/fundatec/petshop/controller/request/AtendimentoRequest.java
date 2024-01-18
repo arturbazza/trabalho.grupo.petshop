@@ -11,12 +11,14 @@ import java.util.Date;
 public class AtendimentoRequest {
     private Date data;
     private String nomeAtendente;
+    private String nomeVeterinario;
     private Boolean pagamentoEfetuado;
     private Integer valorConsulta;
 
     public Atendimento toModel() {
         return Atendimento.builder()
                 .data(data)
+                .nomeVeterinario(nomeVeterinario)
                 .nomeAtendente(nomeAtendente)
                 .pagamentoEfetuado(pagamentoEfetuado)
                 .valorConsulta(valorConsulta)
