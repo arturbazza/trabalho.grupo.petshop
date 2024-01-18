@@ -10,6 +10,12 @@ public class ProdutoRequest {
 
     private Integer valor;
     private String descricao;
-
+    
+    public Produto toModel() {
+        return Produto.builder()
+                .valor(valor)
+                .descricao(descricao)
+                .build();
+    }
 
 }
