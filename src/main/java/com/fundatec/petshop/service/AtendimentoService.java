@@ -33,13 +33,13 @@ public class AtendimentoService {
 
             Atendimento atualizado = atendimentoRepository.save(exist);
 
-            AtendimentoResponse response = new AtendimentoResponse();
-            response.setPagamentoEfetuado(atualizado.getPagamentoEfetuado());
-            response.setData(atualizado.getData());
-            response.setNomeAtendente(atualizado.getNomeAtendente());
-            response.setValorConsulta(atualizado.getValorConsulta());
-
-            return response;
+            return AtendimentoResponse.builder()
+                    .pagamentoEfetuado(atualizado.getPagamentoEfetuado())
+                    .data(atualizado.getData())
+                    .nomeAtendente(atualizado.getNomeAtendente())
+                    .nomeVeterinario(atualizado.getNomeVeterinario())
+                    .valorConsulta(atualizado.getValorConsulta())
+                    .build();
         } else {
             return null;
         }
