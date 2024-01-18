@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -21,8 +23,12 @@ public class Cliente {
     @Column(length = 20, nullable = false)
     private String nome;
 
-    @OneToOne
-    @JoinColumn(name = "", columnDefinition = "string")
-    private Endereco endereco;
+//    @OneToOne
+//    @JoinColumn(name = "", columnDefinition = "string")
+//    private Endereco endereco;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private List<Endereco> enderecos;
 
 }
