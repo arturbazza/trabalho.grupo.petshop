@@ -14,4 +14,12 @@ public class AtendimentoRequest {
     private Boolean pagamentoEfetuado;
     private Integer valorConsulta;
 
+    public Atendimento toModel() {
+        return Atendimento.builder()
+                .data(data)
+                .nomeAtendente(nomeAtendente)
+                .pagamentoEfetuado(pagamentoEfetuado)
+                .valorConsulta(valorConsulta)
+                .build();
+    }
 }
