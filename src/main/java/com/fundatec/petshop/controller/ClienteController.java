@@ -27,7 +27,7 @@ public class ClienteController {
     private ClienteRepository clienteRepository;
     @GetMapping("listar")
     public List<ClienteResponse> listaClientes(@RequestParam(required = false) String nome) {
-        List<Cliente> clientes = clienteRepository.findAll(); // Utiliza o clienteRepository para obter todos os clientes
+        List<Cliente> clientes = clienteRepository.findAll();
         return clientes.stream()
                 .map(ClienteResponse::of)
                 .toList();
@@ -36,12 +36,12 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteResponse criarNovo(@RequestBody ClienteRequest clienteRequest) {
         Cliente model = clienteRequest.toModel();
-        Cliente salvo = clienteRepository.save(model);  // Utiliza o clienteRepository para salvar o cliente
+        Cliente salvo = clienteRepository.save(model);
         return ClienteResponse.of(salvo);
     }
     @DeleteMapping("deletar/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
-        clienteRepository.deleteById(id);  // Utiliza o clienteRepository para deletar o cliente
+        clienteRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -49,7 +49,7 @@ public class ClienteController {
     public ResponseEntity<Void> editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteRequest.toModel();
         cliente.setId(id);
-        clienteRepository.save(cliente);  // Utiliza o clienteRepository para editar o cliente
+        clienteRepository.save(cliente);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

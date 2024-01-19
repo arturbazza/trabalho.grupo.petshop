@@ -12,15 +12,10 @@ import java.util.List;
 @Data
 @Builder
 public class ClienteResponse {
-
     private Long id;
-
     private String nome;
-
     private String cpf;
-
     private List<EnderecoResponse> endereco;
-
     public static ClienteResponse of(Cliente cliente) {
         return ClienteResponse.builder()
                 .id(cliente.getId())

@@ -1,5 +1,6 @@
 package com.fundatec.petshop.controller.response;
 
+import com.fundatec.petshop.model.Produto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -24,3 +25,4 @@ public class ProdutoResponse {
                 .quantidadeAtual(produto.getQuantidadeAtual())
                 .build();
     }
+}
