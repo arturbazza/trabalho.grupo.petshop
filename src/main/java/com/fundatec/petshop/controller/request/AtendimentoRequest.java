@@ -1,5 +1,6 @@
 package com.fundatec.petshop.controller.request;
 
+import com.fundatec.petshop.model.Atendimento;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

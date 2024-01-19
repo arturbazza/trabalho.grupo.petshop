@@ -29,7 +29,6 @@ public class AtendimentoController {
         return "Atendimento aberto com sucesso!";
     }
 
-
     @PostMapping("/finalizar")
     public Atendimento finalizarAtendimento(Long atendimentoId) {
         return atendimentoRepository.findById(atendimentoId).map(atendimento -> {

@@ -26,6 +26,8 @@ public class Atendimento {
     @Column(length = 10, nullable = false)
     private String nomeAtendente;
 
+    @Column(nullable = false)
+    private String nomeVeterinario;
 
     @Column(nullable = false)
     private Boolean pagamentoEfetuado;
