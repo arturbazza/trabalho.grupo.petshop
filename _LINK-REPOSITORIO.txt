@@ -4,7 +4,7 @@ Atividade 04 - Trabalho Final em grupo
 
 Link do repositório "trabalho.grupo.petshop":
 
-- https://github.com/arturbazza/trabalho.grupo.petshop
+- https://github.com/arturbazza/trabalho.grupo.petshop.git
 
 Integrantes:
 - Artur Bazzanella Christmann

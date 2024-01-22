@@ -37,8 +37,9 @@ public class ProdutoController {
     @PostMapping("salvar")
     public ResponseEntity<Void> salvarProduto(@RequestBody ProdutoRequest produtoRequest) {
         Produto produto = Produto.builder()
-                .descricao(produtoRequest.getDescricao())
+                .nome(produtoRequest.getNome())
                 .valor(produtoRequest.getValor())
+                .descricao(produtoRequest.getDescricao())
                 .build();
 
         produtoService.saveProduto(produto);
