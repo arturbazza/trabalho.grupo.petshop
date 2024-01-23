@@ -35,11 +35,7 @@ public class ClienteController {
 
     @PostMapping("salvar")
     public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
-        Cliente cliente = Cliente.builder()
-                .nome(clienteRequest.getNome())
-                .cpf(clienteRequest.getCpf())
-                .enderecos(List.of(clienteRequest.getEndereco().toModel())) // Correção aqui
-                .build();
+        Cliente cliente = clienteRequest.toModel();
 
         clienteService.criarNovo(cliente);
         return new ResponseEntity<>(HttpStatus.CREATED);

@@ -2,13 +2,9 @@ package com.fundatec.petshop.controller.request;
 
 import com.fundatec.petshop.model.Cliente;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-@Setter
-@Getter
 @Data
 public class ClienteRequest {
 
@@ -17,10 +13,15 @@ public class ClienteRequest {
     private EnderecoRequest endereco;
 
     public Cliente toModel() {
-        return Cliente.builder()
+        Cliente cliente = Cliente.builder()
                 .nome(nome)
                 .cpf(cpf)
-                .enderecos(List.of(endereco.toModel()))
                 .build();
+
+        if (endereco != null) {
+            cliente.setEnderecos(List.of(endereco.toModel()));
+        }
+
+        return cliente;
     }
 }

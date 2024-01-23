@@ -26,7 +26,6 @@ public class ProdutoController {
     }
 
     @GetMapping("listar")
-    //coment
     public List<ProdutoResponse> producurarProdutos(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Integer precoMaiorQue,
