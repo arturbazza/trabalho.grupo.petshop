@@ -3,6 +3,7 @@ package com.fundatec.petshop.controller;
 import com.fundatec.petshop.controller.request.ClienteRequest;
 import com.fundatec.petshop.controller.response.ClienteResponse;
 import com.fundatec.petshop.model.Cliente;
+import com.fundatec.petshop.model.Endereco;
 import com.fundatec.petshop.repository.ClienteRepository;
 import com.fundatec.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,27 @@ public class ClienteController {
                 .map(ClienteResponse::of)
                 .toList();
     }
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ClienteResponse criarNovo(@RequestBody ClienteRequest clienteRequest) {
-        Cliente model = clienteRequest.toModel();
-        Cliente salvo = clienteRepository.save(model);
-        return ClienteResponse.of(salvo);
+
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ClienteResponse criarNovo(@RequestBody ClienteRequest clienteRequest) {
+//        Cliente model = clienteRequest.toModel();
+//        Cliente salvo = clienteRepository.save(model);
+//        return ClienteResponse.of(salvo);
+//    }
+
+    @PostMapping("salvar")
+    public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
+        Cliente cliente = Cliente.builder()
+                .nome(clienteRequest.getNome())
+                .cpf(clienteRequest.getCpf())
+                .enderecos((List<Endereco>) clienteRequest.getEndereco())
+                .build();
+
+        clienteService.criarNovo(cliente);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @DeleteMapping("deletar/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         clienteRepository.deleteById(id);

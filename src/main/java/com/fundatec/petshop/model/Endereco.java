@@ -15,17 +15,16 @@ public class Endereco {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50)
-    private Long numero;
-
-    @Column(length = 50)
+    @Column
     private String logradouro;
-
-    @Column(length = 20)
+    @Column
+    private Long numero;
+    @Column
     private String bairro;
-
-    @Column(length = 20)
+    @Column
     private String cidade;
+    @Column
+    private String estado;
 
     @OneToOne
     private Cliente cliente;

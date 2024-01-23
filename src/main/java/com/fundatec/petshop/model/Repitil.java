@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "repitil")
+@Table(name = "reptil")
 
 public class Repitil  extends TipoAnimal{
 

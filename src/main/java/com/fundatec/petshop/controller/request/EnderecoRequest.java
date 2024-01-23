@@ -17,9 +17,10 @@ public class EnderecoRequest {
     public Endereco toModel() {
         return Endereco.builder()
                 .logradouro(logradouro)
-                .cidade(cidade)
-                .bairro(bairro)
                 .numero(numero)
+                .bairro(bairro)
+                .cidade(cidade)
+                .estado(estado)
                 .build();
     }
 }
