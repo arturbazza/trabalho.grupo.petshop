@@ -40,6 +40,7 @@ public class ProdutoController {
                 .nome(produtoRequest.getNome())
                 .valor(produtoRequest.getValor())
                 .descricao(produtoRequest.getDescricao())
+                .quantidadeAtual(produtoRequest.getQuantidadeAtual())
                 .build();
 
         produtoService.saveProduto(produto);

@@ -11,16 +11,15 @@ import lombok.Setter;
 @Data
 @Builder
 public class ProdutoResponse {
-
-    private Integer valor;
     private String nome;
+    private Integer valor;
     private String descricao;
     private Integer quantidadeAtual;
 
     public static ProdutoResponse of(Produto produto) {
         return ProdutoResponse.builder()
-                .valor(produto.getValor())
                 .nome(produto.getNome())
+                .valor(produto.getValor())
                 .descricao(produto.getDescricao())
                 .quantidadeAtual(produto.getQuantidadeAtual())
                 .build();
