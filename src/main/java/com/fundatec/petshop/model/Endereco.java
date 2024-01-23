@@ -1,14 +1,14 @@
 package com.fundatec.petshop.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "enderecos")
 public class Endereco {
     @Id
@@ -17,16 +17,20 @@ public class Endereco {
 
     @Column
     private String logradouro;
+
     @Column
     private Long numero;
+
     @Column
     private String bairro;
+
     @Column
     private String cidade;
+
     @Column
     private String estado;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
-
 }

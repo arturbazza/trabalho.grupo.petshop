@@ -3,6 +3,7 @@ package com.fundatec.petshop.controller;
 import com.fundatec.petshop.controller.request.ClienteRequest;
 import com.fundatec.petshop.controller.response.ClienteResponse;
 import com.fundatec.petshop.model.Cliente;
+import com.fundatec.petshop.model.Endereco;
 import com.fundatec.petshop.repository.ClienteRepository;
 import com.fundatec.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,16 @@ public class ClienteController {
     }
 
     @DeleteMapping("deletar/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+    public ResponseEntity deletarCliente(@PathVariable Long id) {
         clienteRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("editar/{id}")
-    public ResponseEntity<Void> editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
+    public ResponseEntity editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteRequest.toModel();
         cliente.setId(id);
+
         clienteRepository.save(cliente);
         return new ResponseEntity<>(HttpStatus.OK);
     }
