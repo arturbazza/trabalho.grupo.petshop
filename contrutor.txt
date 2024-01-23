@@ -1,0 +1,287 @@
+Em portugues do Brasil
+
+Por favor, preciso ajustar a inserção do cliente e seu enderço utilizando Postman com os seguntes dados:
+
+POST:
+http://localhost:8080/clientes/salvar
+
+{
+    "nome": "Artur",
+    "cpf": "000.000.000-01",
+        "endereco": 
+        {
+        "logradouro": "Mariante",
+        "numero": "300",
+        "bairro": "Moinhos de Vento",
+        "cidade": "Porto Alegre",
+        "estado": "RS"        
+        }
+}
+
+Arquivo: Cliente.java
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Setter
+@Getter
+@Entity
+@Builder
+@Table(name = "clientes")
+public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20, nullable = false)
+    private String nome;
+
+    @Column(length = 20, nullable = false)
+    private String cpf;
+
+//    @OneToOne
+//    @JoinColumn(name = "", columnDefinition = "string")
+//    private Endereco endereco;
+
+
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private List<Endereco> enderecos;
+
+}
+
+Arquivo: Endereço.java
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Builder
+@Table(name = "enderecos")
+public class Endereco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String logradouro;
+    @Column
+    private Long numero;
+    @Column
+    private String bairro;
+    @Column
+    private String cidade;
+    @Column
+    private String estado;
+
+    @OneToOne
+    private Cliente cliente;
+
+}
+
+Arquivo: ClienteController.java
+
+package com.fundatec.petshop.controller;
+
+import com.fundatec.petshop.controller.request.ClienteRequest;
+import com.fundatec.petshop.controller.response.ClienteResponse;
+import com.fundatec.petshop.model.Cliente;
+import com.fundatec.petshop.model.Endereco;
+import com.fundatec.petshop.repository.ClienteRepository;
+import com.fundatec.petshop.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/clientes")
+public class ClienteController {
+    private final ClienteService clienteService;
+    private final List<Cliente> clientes = new ArrayList<>();
+
+    public ClienteController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+    @GetMapping("listar")
+    public List<ClienteResponse> listaClientes(@RequestParam(required = false) String nome) {
+        List<Cliente> clientes = clienteRepository.findAll();
+        return clientes.stream()
+                .map(ClienteResponse::of)
+                .toList();
+    }
+
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ClienteResponse criarNovo(@RequestBody ClienteRequest clienteRequest) {
+//        Cliente model = clienteRequest.toModel();
+//        Cliente salvo = clienteRepository.save(model);
+//        return ClienteResponse.of(salvo);
+//    }
+
+    @PostMapping("salvar")
+    public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
+        Cliente cliente = Cliente.builder()
+                .nome(clienteRequest.getNome())
+                .cpf(clienteRequest.getCpf())
+                .enderecos((List<Endereco>) clienteRequest.getEndereco())
+                .build();
+
+
+        clienteService.criarNovo(cliente);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("deletar/{id}")
+    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+        clienteRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("editar/{id}")
+    public ResponseEntity<Void> editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
+        Cliente cliente = clienteRequest.toModel();
+        cliente.setId(id);
+        clienteRepository.save(cliente);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+}
+
+Arquivo: ClienteRequest.java
+package com.fundatec.petshop.controller.request;
+
+import com.fundatec.petshop.model.Cliente;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Setter
+@Getter
+@Data
+public class ClienteRequest {
+
+    private String nome;
+    private String cpf;
+    private EnderecoRequest endereco;
+
+    public Cliente toModel() {
+        return Cliente.builder()
+                .nome(nome)
+                .cpf(cpf)
+                .enderecos(List.of(endereco.toModel()))
+                .build();
+    }
+}
+
+
+Arquivo: EnderecoRequest.java
+
+package com.fundatec.petshop.controller.request;
+import com.fundatec.petshop.model.Endereco;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Setter
+@Getter
+@Data
+public class EnderecoRequest {
+    private String logradouro;
+    private Long numero;
+    private String bairro;
+    private String cidade;
+    private String estado;
+
+    public Endereco toModel() {
+        return Endereco.builder()
+                .logradouro(logradouro)
+                .numero(numero)
+                .bairro(bairro)
+                .cidade(cidade)
+                .estado(estado)
+                .build();
+    }
+}
+
+Arquivo: ClienteRepository.java
+
+package com.fundatec.petshop.repository;
+
+import com.fundatec.petshop.model.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+}
+
+
+Arquivo: ClienteService.java
+
+package com.fundatec.petshop.service;
+
+import ch.qos.logback.core.net.server.Client;
+import com.fundatec.petshop.model.Cliente;
+import com.fundatec.petshop.repository.ClienteRepository;
+import org.springframework.stereotype.Service;
+
+
+@Service
+public class ClienteService {
+
+    private final ClienteRepository clienteRepository;
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;
+
+    }
+    public Cliente criarNovo(Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    public void deletarCliente(Long id) {
+        clienteRepository.deleteById(id);
+
+    }
+    public void editarCliente(Long id,
+                            Cliente cliente) {
+        clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(id + " não existe"));
+
+        cliente.setId(id);
+        clienteRepository.save(cliente);
+
+    }
+}
+
+
+Erro na inserção:
+
+java.lang.ClassCastException: class com.fundatec.petshop.controller.request.EnderecoRequest cannot be cast to class java.util.List (com.fundatec.petshop.controller.request.EnderecoRequest is in unnamed module of loader 'app'; java.util.List is in module java.base of loader 'bootstrap')
+
+
+Mande-me os arquivos corrigidos completos e comentada as linhas com a correção. 
