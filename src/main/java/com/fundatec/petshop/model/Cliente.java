@@ -24,12 +24,7 @@ public class Cliente {
     @Column(length = 20, nullable = false)
     private String cpf;
 
-//    @OneToOne
-//    @JoinColumn(name = "", columnDefinition = "string")
-//    private Endereco endereco;
-
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private List<Endereco> enderecos;
-
 }

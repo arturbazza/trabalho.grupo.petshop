@@ -3,7 +3,6 @@ package com.fundatec.petshop.controller;
 import com.fundatec.petshop.controller.request.ClienteRequest;
 import com.fundatec.petshop.controller.response.ClienteResponse;
 import com.fundatec.petshop.model.Cliente;
-import com.fundatec.petshop.model.Endereco;
 import com.fundatec.petshop.repository.ClienteRepository;
 import com.fundatec.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +10,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
+
     private final ClienteService clienteService;
-    private final List<Cliente> clientes = new ArrayList<>();
+
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
 
-    @Autowired
-    private ClienteRepository clienteRepository;
     @GetMapping("listar")
     public List<ClienteResponse> listaClientes(@RequestParam(required = false) String nome) {
         List<Cliente> clientes = clienteRepository.findAll();
@@ -34,20 +33,12 @@ public class ClienteController {
                 .toList();
     }
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public ClienteResponse criarNovo(@RequestBody ClienteRequest clienteRequest) {
-//        Cliente model = clienteRequest.toModel();
-//        Cliente salvo = clienteRepository.save(model);
-//        return ClienteResponse.of(salvo);
-//    }
-
     @PostMapping("salvar")
     public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = Cliente.builder()
                 .nome(clienteRequest.getNome())
                 .cpf(clienteRequest.getCpf())
-                .enderecos((List<Endereco>) clienteRequest.getEndereco())
+                .enderecos(List.of(clienteRequest.getEndereco().toModel())) // Correção aqui
                 .build();
 
         clienteService.criarNovo(cliente);
@@ -67,6 +58,4 @@ public class ClienteController {
         clienteRepository.save(cliente);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }
