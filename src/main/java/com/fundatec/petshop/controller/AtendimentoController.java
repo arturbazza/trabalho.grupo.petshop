@@ -43,7 +43,7 @@ public class AtendimentoController {
     public List<AtendimentoResponse> listarAtendimento(@RequestParam(required = false) EstadoAtendimento ABERTO, @RequestParam(required = false, defaultValue = "nomeVeterinario") String sort, @RequestParam(required = false, defaultValue = "asc") String order, @RequestParam(required = false) String dataAberturaInicio, @RequestParam(required = false) String dataAberturaFim, @RequestParam(required = false) String dataEncerramentoInicio, @RequestParam(required = false) String dataEncerramentoFim) {
        List<Atendimento> atendimentos=atendimentoRepository.findAll();
         return atendimentos.stream()
-        .map(AtendimentoResponse::of)
+                      .map(AtendimentoResponse::of)
                 .toList();
     }
 
@@ -59,6 +59,7 @@ public class AtendimentoController {
         Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
 
         if (atendimento != null) {
+          //Precisa refazer (deve procurar na lista dos produtos que já existem)
             Produto produto = Produto.builder().descricao(produtoRequest.getDescricao()).valor(produtoRequest.getValor()).build();
 
             atendimento.getProdutos().add(produto);
@@ -87,7 +88,7 @@ public class AtendimentoController {
     @PostMapping("/adicionarPagamento/{atendimentoId}")
     public ResponseEntity<Void> adicionarPagamentoAoAtendimento(@PathVariable Long atendimentoId, @RequestBody Pagamento pagamento) {
         Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
-
+//Está adicionando o pagamento (só não aparece na tabela atendimento)
         if (atendimento != null) {
             pagamento.setAtendimento(atendimento);
             atendimento.getPagamentos().add(pagamento);
