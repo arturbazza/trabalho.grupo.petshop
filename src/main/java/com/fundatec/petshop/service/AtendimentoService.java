@@ -16,8 +16,9 @@ public class AtendimentoService {
         this.atendimentoRepository = atendimentoRepository;
     }
 
-    public void abrirAtendimento(Atendimento atendimento) {
+    public Atendimento abrirAtendimento(Atendimento atendimento) {
         atendimentoRepository.save(atendimento);
+        return atendimento;
     }
 
     public AtendimentoResponse editarAtendimento(Long atendimentoId, AtendimentoRequest atendimentoRequest) {

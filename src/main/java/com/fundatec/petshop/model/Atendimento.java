@@ -30,7 +30,7 @@ public class Atendimento {
     private String nomeVeterinario;
 
     @Column(nullable = false)
-    private Boolean pagamentoEfetuado;
+    private Boolean pagamentoEfetuado = false;
 
     @Column(nullable = false)
     private Integer valorConsulta;

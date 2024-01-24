@@ -17,8 +17,6 @@ import java.util.List;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    //comentario
-
     private final ClienteService clienteService;
 
     @Autowired
