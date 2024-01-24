@@ -41,10 +41,13 @@ public class AtendimentoController {
 
     @GetMapping("listar")
     public List<AtendimentoResponse> listarAtendimento(@RequestParam(required = false) EstadoAtendimento ABERTO, @RequestParam(required = false, defaultValue = "nomeVeterinario") String sort, @RequestParam(required = false, defaultValue = "asc") String order, @RequestParam(required = false) String dataAberturaInicio, @RequestParam(required = false) String dataAberturaFim, @RequestParam(required = false) String dataEncerramentoInicio, @RequestParam(required = false) String dataEncerramentoFim) {
-        return new ArrayList<>();
+       List<Atendimento> atendimentos=atendimentoRepository.findAll();
+        return atendimentos.stream()
+        .map(AtendimentoResponse::of)
+                .toList();
     }
 
-    @PutMapping("editar")
+    @PatchMapping("editar")
     public ResponseEntity<AtendimentoResponse> editarAtendimento(@PathVariable Long atendimentoId, @RequestBody AtendimentoRequest atendimentoRequest) {
         AtendimentoResponse atendimentoResponse = atendimentoService.editarAtendimento(atendimentoId, atendimentoRequest);
         return ResponseEntity.ok(atendimentoResponse);
