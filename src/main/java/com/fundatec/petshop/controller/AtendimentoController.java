@@ -14,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -88,7 +86,7 @@ public class AtendimentoController {
     @PostMapping("/adicionarPagamento/{atendimentoId}")
     public ResponseEntity<Void> adicionarPagamentoAoAtendimento(@PathVariable Long atendimentoId, @RequestBody Pagamento pagamento) {
         Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
-//Está adicionando o pagamento (só não aparece na tabela atendimento)
+     //Está adicionando o pagamento (só não aparece na tabela atendimento)
         if (atendimento != null) {
             pagamento.setAtendimento(atendimento);
             atendimento.getPagamentos().add(pagamento);

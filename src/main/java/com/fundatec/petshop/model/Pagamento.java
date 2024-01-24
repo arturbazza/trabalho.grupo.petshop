@@ -15,8 +15,8 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "valor")
-    private Integer valor;
+    @Column(name = "valorPago")
+    private Integer valorPago;
 
     @Column(name = "datapagamento")
     @Temporal(TemporalType.DATE)
