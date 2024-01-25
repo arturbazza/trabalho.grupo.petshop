@@ -1,0 +1,458 @@
+{
+	"info": {
+		"_postman_id": "fbf532c0-505c-4f4d-b84a-7f6d9b0d2ed5",
+		"name": "Trabalho Final T23",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31045965"
+	},
+	"item": [
+		{
+			"name": "cliente",
+			"item": [
+				{
+					"name": "Criar um novo cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Marta\",\n    \"cpf\": \"000.000.000-00\",\n    \"endereco\": {\n        \"logradouro\": \"Av. Ipiranga\",\n        \"numero\": 1200,\n        \"bairro\": \"Jardim Carvalho\",\n        \"cidade\": \"Porto Alegre\",\n        \"estado\": \"RS\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/clientes/salvar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"clientes",
+								"salvar"
+							]
+						},
+						"description": "Cria um novo cliente no banco de dados, nome e cpf devem ser únicos"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar um cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Marta 6\",\n    \"cpf\": \"000.000.000-00\",\n    \"endereco\": {\n        \"logradouro\": \"Av. Ipiranga\",\n        \"numero\": 1200,\n        \"bairro\": \"Jardim Carvalho\",\n        \"cidade\": \"Porto Alegre\",\n        \"estado\": \"RS\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes/editar/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes",
+								"editar",
+								"1"
+							]
+						},
+						"description": "Edita um cliente com as mesmas validações da criação"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos os clientes",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/clientes?nome",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": null
+								}
+							]
+						},
+						"description": "Lista todos os clientes do sistema e permite o filtro de dados"
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/clientes/deletar/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"clientes",
+								"deletar",
+								"1"
+							]
+						},
+						"description": "Deleta um cliente no banco de dados, não é possivel deletar um cliente com atendimentos"
+					},
+					"response": []
+				}
+			],
+			"description": "Gerencia de clientes"
+		},
+		{
+			"name": "produto",
+			"item": [
+				{
+					"name": "Criar um novo produto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Biscoito\",\n    \"preco\": 1200,\n    \"descricao\": \"Biscoito maizena\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos"
+							]
+						},
+						"description": "Cria um produto na base de dados.\n\n- nome: Nome do produto. Deve ser único\n    \n- preco: Preço do produto em centavos não reais. Exemplo: R$ 10,00 = 1000"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar um produto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Biscoito\",\n    \"preco\": 1200,\n    \"descricao\": \"Biscoito maizena\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/produtos/{{idProduto}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						},
+						"description": "Cria um produto na base de dados.\n\n- nome: Nome do produto. Deve ser único\n    \n- preco: Preço do produto em centavos não reais. Exemplo: R$ 10,00 = 1000\n    \n\nRealiza as mesmas validações da adição de produto"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar produtos cadastrados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/produtos?nome&precoMaiorQue=5&precoMenorQue=10",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos"
+							],
+							"query": [
+								{
+									"key": "nome",
+									"value": null,
+									"description": "Filtro pelo nome do produto començando com o parametro e ignorando case."
+								},
+								{
+									"key": "precoMaiorQue",
+									"value": "5",
+									"description": "Filtra preços maiores que o valor enviado"
+								},
+								{
+									"key": "precoMenorQue",
+									"value": "10",
+									"description": "Filtra preços menores que o valor"
+								}
+							]
+						},
+						"description": "Lista todos os clientes do sistema e permite o filtro de dados"
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar produto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/produtos/{{idProduto}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						},
+						"description": "Deleta um produto do banco de dados caso não haja associações."
+					},
+					"response": []
+				}
+			],
+			"description": "Gerencia de clientes"
+		},
+		{
+			"name": "atendimento",
+			"item": [
+				{
+					"name": "Listar Atendimentos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/atendimentos/listar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"atendimentos",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Iniciar atendimento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nomeVeterinario\": \"Anderson 5\",\n    \"nomeAtendente\": \"Andre\",\n    \"idCliente\": 2,\n    \"pagamentoEfetuado\": false,\n    \"valorConsulta\": 10000,\n    \"produtos\": [\n        {\n            \"idProduto\": 1\n        }, {\n            \"idProduto\": 5\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/atendimentos/abrir",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"atendimentos",
+								"abrir"
+							]
+						},
+						"description": "Inicia um atendimento ao cliente especificado.\n\nInformações obrigatórias\n\n- nomeVeterinario\n    \n- nomeAtendente\n    \n- idCliente\n    \n\nInformações opcionais\n\n- valorConsulta\n    \n- produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Editar um atendimento",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"valorConsulta\": 10000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/atendimentos/editar/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"atendimentos",
+								"editar",
+								"2"
+							]
+						},
+						"description": "Edita um atendimento parcialmente\n\nItens aceitos:\n\n- valorConsulta - Valor em centavos da consulta a ser cobrado."
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar produtos",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"produtos\": [\n        {\n            \"idProduto\": 1\n        }, {\n            \"idProduto\": 5\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/atendimentos/{{idAtendimento}}/produtos",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"atendimentos",
+								"{{idAtendimento}}",
+								"produtos"
+							]
+						},
+						"description": "Altera o atendimento adicionando produtos ao mesmo.\n\nOs ids de produtos serão adicionados ao atendimento sem remover os anteriores"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover produtos de um atendimento",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"produtos\": [\n        {\n            \"idProduto\": 1\n        }, {\n            \"idProduto\": 5\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/atendimentos/{{idAtendimento}}/produtos",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"atendimentos",
+								"{{idAtendimento}}",
+								"produtos"
+							]
+						},
+						"description": "Altera o atendimento adicionando produtos ao mesmo"
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar pagamentos a um atendimento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"valorPago\": 2000,\n    \"formaPagamento\": \"PIX\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/atendimentos/adicionarPagamento/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"atendimentos",
+								"adicionarPagamento",
+								"2"
+							]
+						},
+						"description": "Adiciona pagamentos a um atendimento.\n\nO valor do pagamento deve ser consistente com o atendimento:\n\n- valor pagamento não pode ser maior que atendimento.valorConsulta + Soma(produto.valor \\* atendimento_produto.quantidade)\n    \n- valor pagamento não pode ser <=0"
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar um atendimento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/atendimentos/2/finalizar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"atendimentos",
+								"2",
+								"finalizar"
+							]
+						},
+						"description": "Finaliza um atendimento fazendo a consistencia dos dados.\n\n- Atendimento deve estar pago\n- Não pode ser finalizado um atendimento sem valorConsulta ou produtos. Ou seja não pode ter soma de valores = 0\n- Estoque de produtos não deve ficar negativo ao finalizar um atendimento.\n    \n- Dar baixa em estoque automaticamente ao finalizar um atendimento com sucesso\n    \n\nCaso o atendimento seja finalizado retorna um 200\n\nCaso tenha alguma validação de negocio acima retornar um 412: [https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/412](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/412)\n\nMensagem de erro estará devidamente formatada."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
