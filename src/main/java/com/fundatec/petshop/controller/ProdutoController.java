@@ -26,7 +26,7 @@ public class ProdutoController {
     }
 
     @GetMapping("listar")
-    public List<ProdutoResponse> producurarProdutos(
+    public List<ProdutoResponse> procurarProdutos(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Integer precoMaiorQue,
             @RequestParam(required = false) Integer precoMenorQue

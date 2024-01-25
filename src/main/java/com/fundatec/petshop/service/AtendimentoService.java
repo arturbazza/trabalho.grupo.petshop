@@ -1,9 +1,13 @@
 package com.fundatec.petshop.service;
 
 import com.fundatec.petshop.controller.request.AtendimentoRequest;
+import com.fundatec.petshop.controller.request.ProdutoRequest;
 import com.fundatec.petshop.controller.response.AtendimentoResponse;
+import com.fundatec.petshop.controller.response.ProdutoResponse;
 import com.fundatec.petshop.model.Atendimento;
+import com.fundatec.petshop.model.Produto;
 import com.fundatec.petshop.repository.AtendimentoRepository;
+import com.fundatec.petshop.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

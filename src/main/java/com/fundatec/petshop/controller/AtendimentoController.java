@@ -52,23 +52,13 @@ public class AtendimentoController {
     }
 
 
-    @PostMapping("adicionarProduto")
-    public ResponseEntity<Void> adicionarProdutoAoAtendimento(@PathVariable Long atendimentoId, @RequestBody ProdutoRequest produtoRequest) {
-        Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
+  // Testar de esse metodo se está funcionando(está funcionando no postman mas não aparece na tabela)
+    @PostMapping("/{id}/produtos")
+    public void adicionarProdutos(@RequestBody AdicionarProdutoRequest adicionarProdutoRequest) {
 
-        if (atendimento != null) {
-          //Precisa refazer (deve procurar na lista dos produtos que já existem)
-            Produto produto = Produto.builder().descricao(produtoRequest.getDescricao()).valor(produtoRequest.getValor()).build();
-
-            atendimento.getProdutos().add(produto);
-            atendimentoService.adicionarProduto(atendimento);
-
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
     }
 
+// Testar
     @DeleteMapping("/removerProduto/{atendimentoId}/{produtoId}")
     public ResponseEntity<Void> removerProdutoDoAtendimento(@PathVariable Long atendimentoId, @PathVariable Long produtoId) {
         Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
@@ -86,7 +76,6 @@ public class AtendimentoController {
     @PostMapping("/adicionarPagamento/{atendimentoId}")
     public ResponseEntity<Void> adicionarPagamentoAoAtendimento(@PathVariable Long atendimentoId, @RequestBody Pagamento pagamento) {
         Atendimento atendimento = atendimentoRepository.findById(atendimentoId).orElse(null);
-     //Está adicionando o pagamento (só não aparece na tabela atendimento)
         if (atendimento != null) {
             pagamento.setAtendimento(atendimento);
             atendimento.getPagamentos().add(pagamento);
