@@ -4,17 +4,12 @@ import com.fundatec.petshop.controller.request.ProdutoRequest;
 import com.fundatec.petshop.controller.response.ProdutoResponse;
 import com.fundatec.petshop.model.Produto;
 import com.fundatec.petshop.service.ProdutoService;
-import lombok.Builder;
-import lombok.Data;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.net.URI;
 import java.util.List;
 
-@Data
-@Builder
 @RestController
 @RequestMapping(path = "produtos")
 public class ProdutoController {
@@ -26,46 +21,35 @@ public class ProdutoController {
     }
 
     @GetMapping("listar")
-    public List<ProdutoResponse> procurarProdutos(
+    public ResponseEntity<List<ProdutoResponse>> procurarProdutos(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Integer precoMaiorQue,
             @RequestParam(required = false) Integer precoMenorQue
     ) {
-        return new ArrayList<>();
+        List<Produto> produtos = produtoService.procurarProdutos(nome, precoMaiorQue, precoMenorQue);
+        List<ProdutoResponse> responseList = produtos.stream()
+                .map(ProdutoResponse::of)
+                .toList();
+        return ResponseEntity.ok(responseList);
     }
 
     @PostMapping("salvar")
-    public ResponseEntity salvarProduto(@RequestBody ProdutoRequest produtoRequest) {
-        Produto produto = Produto.builder()
-                .nome(produtoRequest.getNome())
-                .valor(produtoRequest.getValor())
-                .descricao(produtoRequest.getDescricao())
-                .quantidadeAtual(produtoRequest.getQuantidadeAtual())
-                .build();
-
+    public ResponseEntity<Void> salvarProduto(@RequestBody ProdutoRequest produtoRequest) {
+        Produto produto = produtoRequest.toModel();
         produtoService.saveProduto(produto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.created(URI.create("/produtos/" + produto.getProdutoId())).build();
     }
 
     @DeleteMapping("deletar/{id}")
-    public ResponseEntity deletarProduto(@PathVariable Long produtoId) {
-        produtoService.deleteProduto(produtoId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
+        produtoService.deleteProduto(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("editar/{id}")
-    public ResponseEntity editarProduto(@PathVariable Long produtoId, @RequestBody ProdutoRequest produtoRequest) {
-        Produto produto = Produto.builder()
-                .descricao(produtoRequest.getDescricao())
-                .valor(produtoRequest.getValor())
-                .build();
-
-        produtoService.editProduto(produtoId, produto);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Void> editarProduto(@PathVariable Long id, @RequestBody ProdutoRequest produtoRequest) {
+        Produto produto = produtoRequest.toModel();
+        produtoService.editProduto(id, produto);
+        return ResponseEntity.ok().build();
     }
-
 }
-
-
-
-

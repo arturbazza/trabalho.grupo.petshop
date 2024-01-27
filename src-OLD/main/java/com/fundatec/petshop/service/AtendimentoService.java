@@ -3,10 +3,11 @@ package com.fundatec.petshop.service;
 import com.fundatec.petshop.controller.request.AtendimentoRequest;
 import com.fundatec.petshop.controller.request.ProdutoRequest;
 import com.fundatec.petshop.controller.response.AtendimentoResponse;
+import com.fundatec.petshop.controller.response.ProdutoResponse;
 import com.fundatec.petshop.model.Atendimento;
-import com.fundatec.petshop.model.Pagamento;
 import com.fundatec.petshop.model.Produto;
 import com.fundatec.petshop.repository.AtendimentoRepository;
+import com.fundatec.petshop.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,7 +21,8 @@ public class AtendimentoService {
     }
 
     public Atendimento abrirAtendimento(Atendimento atendimento) {
-        return atendimentoRepository.save(atendimento);
+        atendimentoRepository.save(atendimento);
+        return atendimento;
     }
 
     public AtendimentoResponse editarAtendimento(Long atendimentoId, AtendimentoRequest atendimentoRequest) {
@@ -48,34 +50,15 @@ public class AtendimentoService {
         }
     }
 
-    public void adicionarProduto(Long atendimentoId, ProdutoRequest produtoRequest) {
-        Optional<Atendimento> atendimentoOptional = atendimentoRepository.findById(atendimentoId);
-
-        if (atendimentoOptional.isPresent()) {
-            Atendimento atendimento = atendimentoOptional.get();
-            Produto produto = produtoRequest.toModel();
-            atendimento.getProdutos().add(produto);
-            atendimentoRepository.save(atendimento);
-        }
+    public void adicionarProduto(Atendimento atendimento) {
+        atendimentoRepository.save(atendimento);
     }
 
-    public void removerProduto(Long atendimentoId, Long produtoId) {
-        Optional<Atendimento> atendimentoOptional = atendimentoRepository.findById(atendimentoId);
-
-        if (atendimentoOptional.isPresent()) {
-            Atendimento atendimento = atendimentoOptional.get();
-            atendimento.getProdutos().removeIf(produto -> produto.getProdutoId().equals(produtoId));
-            atendimentoRepository.save(atendimento);
-        }
+    public void removerProduto(Atendimento atendimento) {
+        atendimentoRepository.save(atendimento);
     }
 
-    public void adicionarPagamento(Long atendimentoId, Pagamento pagamento) {
-        Optional<Atendimento> atendimentoOptional = atendimentoRepository.findById(atendimentoId);
-
-        if (atendimentoOptional.isPresent()) {
-            Atendimento atendimento = atendimentoOptional.get();
-            atendimento.getPagamentos().add(pagamento);
-            atendimentoRepository.save(atendimento);
-        }
+    public void adicionarPagamento(Atendimento atendimento) {
+        atendimentoRepository.save(atendimento);
     }
 }

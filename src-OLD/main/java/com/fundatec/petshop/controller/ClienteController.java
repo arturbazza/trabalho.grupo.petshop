@@ -3,13 +3,14 @@ package com.fundatec.petshop.controller;
 import com.fundatec.petshop.controller.request.ClienteRequest;
 import com.fundatec.petshop.controller.response.ClienteResponse;
 import com.fundatec.petshop.model.Cliente;
+import com.fundatec.petshop.model.Endereco;
 import com.fundatec.petshop.repository.ClienteRepository;
 import com.fundatec.petshop.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -26,40 +27,33 @@ public class ClienteController {
     }
 
     @GetMapping("listar")
-    public ResponseEntity<List<ClienteResponse>> listaClientes(@RequestParam(required = false) String nome) {
+    public List<ClienteResponse> listaClientes(@RequestParam(required = false) String nome) {
         List<Cliente> clientes = clienteRepository.findAll();
-        List<ClienteResponse> responseList = clientes.stream()
+        return clientes.stream()
                 .map(ClienteResponse::of)
                 .toList();
-        return ResponseEntity.ok(responseList);
     }
 
     @PostMapping("salvar")
     public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteRequest.toModel();
+
         clienteService.criarNovo(cliente);
-        return ResponseEntity.created(URI.create("/clientes/" + cliente.getId())).build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("deletar/{id}")
-    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
-        if (clienteRepository.existsById(id)) {
-            clienteRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity deletarCliente(@PathVariable Long id) {
+        clienteRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("editar/{id}")
-    public ResponseEntity<Void> editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
-        if (clienteRepository.existsById(id)) {
-            Cliente cliente = clienteRequest.toModel();
-            cliente.setId(id);
-            clienteRepository.save(cliente);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
+        Cliente cliente = clienteRequest.toModel();
+        cliente.setId(id);
+
+        clienteRepository.save(cliente);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

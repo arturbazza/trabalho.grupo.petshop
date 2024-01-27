@@ -2,35 +2,63 @@ package com.fundatec.petshop.service;
 
 import com.fundatec.petshop.model.Produto;
 import com.fundatec.petshop.repository.ProdutoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
 
+    @Autowired
     public ProdutoService(ProdutoRepository produtoRepository) {
         this.produtoRepository = produtoRepository;
     }
 
+    @Transactional
     public void saveProduto(Produto produto) {
         produtoRepository.save(produto);
     }
 
+    @Transactional
     public void deleteProduto(Long produtoId) {
         produtoRepository.deleteById(produtoId);
     }
 
+    @Transactional
     public void editProduto(Long produtoId, Produto produto) {
-        produtoRepository.findById(produtoId)
-                .orElseThrow(() -> new RuntimeException(produtoId + " não existe"));
+        Produto existingProduto = produtoRepository.findById(produtoId)
+                .orElseThrow(() -> new RuntimeException(getProdutoNaoExisteMessage(produtoId)));
 
-        produto.setProdutoId(produtoId);
-        produtoRepository.save(produto);
+        existingProduto.setDescricao(produto.getDescricao());
+        existingProduto.setValor(produto.getValor());
+
+        produtoRepository.save(existingProduto);
     }
 
-    public Produto getProdutoId(Long produtoId) {
-        return this.produtoRepository.findById(produtoId)
-                .orElseThrow(() -> new RuntimeException(produtoId + " não existe"));
+    @Transactional(readOnly = true)
+    public Produto getProdutoById(Long produtoId) {
+        return produtoRepository.findById(produtoId)
+                .orElseThrow(() -> new RuntimeException(getProdutoNaoExisteMessage(produtoId)));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Produto> procurarProdutos(String nome, Integer precoMaiorQue, Integer precoMenorQue) {
+        if (nome != null && precoMaiorQue != null && precoMenorQue != null) {
+            return produtoRepository.findByNomeContainingAndValorBetween(nome, precoMaiorQue, precoMenorQue);
+        } else if (nome != null) {
+            return produtoRepository.findByNomeContaining(nome);
+        } else if (precoMaiorQue != null && precoMenorQue != null) {
+            return produtoRepository.findByValorBetween(precoMaiorQue, precoMenorQue);
+        } else {
+            return produtoRepository.findAll();
+        }
+    }
+
+    private String getProdutoNaoExisteMessage(Long produtoId) {
+        return "Produto com ID " + produtoId + " não existe.";
     }
 }

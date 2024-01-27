@@ -18,6 +18,7 @@ public class EnderecoResponse {
     private String cidade;
     private String estado;
 
+
     public static EnderecoResponse of(Endereco endereco) {
         return EnderecoResponse.builder()
                 .id(endereco.getId())
@@ -25,7 +26,7 @@ public class EnderecoResponse {
                 .cidade(endereco.getCidade())
                 .numero(endereco.getNumero())
                 .logradouro(endereco.getLogradouro())
-                .estado(endereco.getEstado())
                 .build();
     }
 }
+

@@ -1,7 +1,6 @@
 package com.fundatec.petshop.service;
 
 import ch.qos.logback.core.net.server.Client;
-import com.fundatec.petshop.controller.request.ClienteRequest;
 import com.fundatec.petshop.model.Cliente;
 import com.fundatec.petshop.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
@@ -23,13 +22,14 @@ public class ClienteService {
         clienteRepository.deleteById(id);
 
     }
-    public void editarCliente(Long id, ClienteRequest clienteRequest) {
-        Cliente clienteExistente = clienteRepository.findById(id)
+    public void editarCliente(Long id,
+                            Cliente cliente) {
+        clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(id + " não existe"));
-        clienteExistente.setNome(clienteRequest.getNome());
-        clienteExistente.setCpf(clienteRequest.getCpf());
 
-        clienteRepository.save(clienteExistente);
+        cliente.setId(id);
+        clienteRepository.save(cliente);
+
     }
 }
 
