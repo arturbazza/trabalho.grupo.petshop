@@ -4,7 +4,6 @@ import com.fundatec.petshop.controller.request.AdicionarProdutoRequest;
 import com.fundatec.petshop.controller.request.AtendimentoRequest;
 import com.fundatec.petshop.controller.response.AtendimentoResponse;
 import com.fundatec.petshop.model.Atendimento;
-import com.fundatec.petshop.model.EstadoAtendimento;
 import com.fundatec.petshop.model.Pagamento;
 import com.fundatec.petshop.repository.AtendimentoRepository;
 import com.fundatec.petshop.service.AtendimentoService;
@@ -24,9 +23,9 @@ public class AtendimentoController {
     private final AtendimentoService atendimentoService;
 
     @PostMapping("abrir")
-    public ResponseEntity<String> abrirAtendimento(@RequestBody @Valid AtendimentoRequest atendimentoRequest) {
+    public String abrirAtendimento(@RequestBody @Valid AtendimentoRequest atendimentoRequest) {
         atendimentoService.abrirAtendimento(atendimentoRequest.toModel());
-        return ResponseEntity.ok("Atendimento aberto com sucesso!");
+        return "Atendimento aberto com sucesso!";
     }
 
     @PostMapping("finalizar/{id}")
@@ -59,14 +58,13 @@ public class AtendimentoController {
     }
 
 
-    // Testar de esse metodo se está funcionando(está funcionando no postman mas não aparece na tabela)
-    @PostMapping("/{id}/produtos")
+    @PostMapping("{id}/produtos")
     public void adicionarProdutos(@RequestBody AdicionarProdutoRequest adicionarProdutoRequest) {
 
     }
 
 // Testar
-@DeleteMapping("/removerProduto/{atendimentoId}/{produtoId}")
+@DeleteMapping("/remover{atendimentoId}/{produtoId}")
 public ResponseEntity<Void> removerProdutoDoAtendimento(@PathVariable Long atendimentoId, @PathVariable Long produtoId) {
     Optional<Atendimento> optionalAtendimento = atendimentoRepository.findById(atendimentoId);
 

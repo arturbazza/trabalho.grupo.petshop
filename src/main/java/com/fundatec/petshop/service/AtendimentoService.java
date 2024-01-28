@@ -19,9 +19,12 @@ public class AtendimentoService {
         this.atendimentoRepository = atendimentoRepository;
     }
 
+
     public Atendimento abrirAtendimento(Atendimento atendimento) {
-        return atendimentoRepository.save(atendimento);
+        atendimentoRepository.save(atendimento);
+        return atendimento;
     }
+
 
     public AtendimentoResponse editarAtendimento(Long atendimentoId, AtendimentoRequest atendimentoRequest) {
         Optional<Atendimento> existOptional = atendimentoRepository.findById(atendimentoId);

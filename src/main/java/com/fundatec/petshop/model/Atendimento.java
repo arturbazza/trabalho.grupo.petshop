@@ -23,10 +23,10 @@ public class Atendimento {
     @Temporal(TemporalType.TIMESTAMP)
     private Date data;
 
-    @Column(length = 10, nullable = false)
+    @Column(length = 10)
     private String nomeAtendente;
 
-    @Column(nullable = false)
+    @Column(length = 30)
     private String nomeVeterinario;
 
     @Column(nullable = false)

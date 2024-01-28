@@ -1,5 +1,4 @@
 package com.fundatec.petshop.controller.response;
-
 import com.fundatec.petshop.model.Atendimento;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.Date;
 public class AtendimentoResponse {
     private String nomeVeterinario;
     private String nomeAtendente;
-    private Long atendimentoId;
+    private Long atendimendoId;
     private Integer valorConsulta;
     private Boolean pagamentoEfetuado;
     private Date data;
@@ -24,7 +23,7 @@ public class AtendimentoResponse {
         return AtendimentoResponse.builder()
                 .nomeVeterinario(atendimento.getNomeVeterinario())
                 .nomeAtendente(atendimento.getNomeAtendente())
-                .atendimentoId(atendimento.getAtendimentoId())
+                .atendimendoId(atendimento.getAtendimentoId())
                 .valorConsulta(atendimento.getValorConsulta())
                 .pagamentoEfetuado(atendimento.getPagamentoEfetuado())
                 .data(atendimento.getData())
