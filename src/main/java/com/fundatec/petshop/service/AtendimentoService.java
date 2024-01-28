@@ -4,9 +4,11 @@ import com.fundatec.petshop.controller.request.AtendimentoRequest;
 import com.fundatec.petshop.controller.request.ProdutoRequest;
 import com.fundatec.petshop.controller.response.AtendimentoResponse;
 import com.fundatec.petshop.model.Atendimento;
+import com.fundatec.petshop.model.FormaPagamento;
 import com.fundatec.petshop.model.Pagamento;
 import com.fundatec.petshop.model.Produto;
 import com.fundatec.petshop.repository.AtendimentoRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,30 +28,36 @@ public class AtendimentoService {
     }
 
 
-    public AtendimentoResponse editarAtendimento(Long atendimentoId, AtendimentoRequest atendimentoRequest) {
+    public ResponseEntity<AtendimentoResponse> editarAtendimento(Long atendimentoId, AtendimentoRequest atendimentoRequest) {
         Optional<Atendimento> existOptional = atendimentoRepository.findById(atendimentoId);
 
         if (existOptional.isPresent()) {
             Atendimento exist = existOptional.get();
 
-            exist.setPagamentoEfetuado(atendimentoRequest.getPagamentoEfetuado());
+
+            if (atendimentoRequest.getPagamentoEfetuado() != null) {
+                exist.setPagamentoEfetuado(atendimentoRequest.getPagamentoEfetuado());
+            }
+
             exist.setData(atendimentoRequest.getData());
             exist.setNomeAtendente(atendimentoRequest.getNomeAtendente());
             exist.setValorConsulta(atendimentoRequest.getValorConsulta());
 
             Atendimento atualizado = atendimentoRepository.save(exist);
 
-            return AtendimentoResponse.builder()
+            return ResponseEntity.ok(AtendimentoResponse.builder()
                     .pagamentoEfetuado(atualizado.getPagamentoEfetuado())
                     .data(atualizado.getData())
                     .nomeAtendente(atualizado.getNomeAtendente())
                     .nomeVeterinario(atualizado.getNomeVeterinario())
                     .valorConsulta(atualizado.getValorConsulta())
-                    .build();
+                    .build());
         } else {
-            return null;
+            return ResponseEntity.notFound().build();
         }
     }
+
+
 
     public void adicionarProduto(Long atendimentoId, ProdutoRequest produtoRequest) {
         Optional<Atendimento> atendimentoOptional = atendimentoRepository.findById(atendimentoId);
@@ -77,8 +85,12 @@ public class AtendimentoService {
 
         if (atendimentoOptional.isPresent()) {
             Atendimento atendimento = atendimentoOptional.get();
+
+            pagamento.setFormaPagamento(FormaPagamento.valueOf(pagamento.getFormaPagamento().toString()));
             atendimento.getPagamentos().add(pagamento);
             atendimentoRepository.save(atendimento);
         }
     }
+
 }
+

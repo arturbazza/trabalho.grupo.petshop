@@ -13,20 +13,19 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping(path ="/clientes")
 public class ClienteController {
 
     private final ClienteService clienteService;
+    private final ClienteRepository clienteRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
-
-    public ClienteController(ClienteService clienteService) {
+    public ClienteController(ClienteService clienteService, ClienteRepository clienteRepository) {
         this.clienteService = clienteService;
+        this.clienteRepository = clienteRepository;
     }
-
-    @GetMapping("listar")
-    public ResponseEntity<List<ClienteResponse>> listaClientes(@RequestParam(required = false) String nome) {
+    @GetMapping
+    public ResponseEntity<List<ClienteResponse>> listaClientes(@RequestParam(name = "nome",required = false) String nome) {
         List<Cliente> clientes = clienteRepository.findAll();
         List<ClienteResponse> responseList = clientes.stream()
                 .map(ClienteResponse::of)
@@ -34,14 +33,14 @@ public class ClienteController {
         return ResponseEntity.ok(responseList);
     }
 
-    @PostMapping("salvar")
-    public ResponseEntity<Void> salvarCliente(@RequestBody ClienteRequest clienteRequest) {
+    @PostMapping
+    public ResponseEntity<Void> criarCliente(@RequestBody ClienteRequest clienteRequest) {
         Cliente cliente = clienteRequest.toModel();
         clienteService.criarNovo(cliente);
         return ResponseEntity.created(URI.create("/clientes/" + cliente.getId())).build();
     }
 
-    @DeleteMapping("deletar/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
         if (clienteRepository.existsById(id)) {
             clienteRepository.deleteById(id);
@@ -51,7 +50,7 @@ public class ClienteController {
         }
     }
 
-    @PutMapping("editar/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Void> editarCliente(@PathVariable Long id, @RequestBody ClienteRequest clienteRequest) {
         if (clienteRepository.existsById(id)) {
             Cliente cliente = clienteRequest.toModel();

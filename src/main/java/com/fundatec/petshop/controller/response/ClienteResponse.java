@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-@Getter
-@Setter
+
 @Data
 @Builder
 public class ClienteResponse {
@@ -21,8 +20,9 @@ public class ClienteResponse {
                 .id(cliente.getId())
                 .nome(cliente.getNome())
                 .cpf(cliente.getCpf())
+
                 .endereco(
-                        List.of(EnderecoResponse.of((Endereco) cliente.getEnderecos()))
+                        EnderecoResponse.of(cliente.getEnderecos())
                 )
                 .build();
     }

@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "produtos")
+@RequestMapping(path = "/produtos")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -20,7 +20,7 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    @GetMapping("listar")
+    @GetMapping
     public ResponseEntity<List<ProdutoResponse>> procurarProdutos(
             @RequestParam(required = false) String nome,
             @RequestParam(required = false) Integer precoMaiorQue,
@@ -33,20 +33,20 @@ public class ProdutoController {
         return ResponseEntity.ok(responseList);
     }
 
-    @PostMapping("salvar")
+    @PostMapping
     public ResponseEntity<Void> salvarProduto(@RequestBody ProdutoRequest produtoRequest) {
         Produto produto = produtoRequest.toModel();
         produtoService.saveProduto(produto);
         return ResponseEntity.created(URI.create("/produtos/" + produto.getProdutoId())).build();
     }
 
-    @DeleteMapping("deletar/{id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
         produtoService.deleteProduto(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("editar/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Void> editarProduto(@PathVariable Long id, @RequestBody ProdutoRequest produtoRequest) {
         Produto produto = produtoRequest.toModel();
         produtoService.editProduto(id, produto);

@@ -16,29 +16,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/atendimentos")
+@RequestMapping(path ="/atendimentos")
 @RequiredArgsConstructor
 public class AtendimentoController {
     private final AtendimentoRepository atendimentoRepository;
     private final AtendimentoService atendimentoService;
 
-    @PostMapping("abrir")
+    @PostMapping
     public String abrirAtendimento(@RequestBody @Valid AtendimentoRequest atendimentoRequest) {
         atendimentoService.abrirAtendimento(atendimentoRequest.toModel());
         return "Atendimento aberto com sucesso!";
     }
 
-    @PostMapping("finalizar/{id}")
-    public ResponseEntity<AtendimentoResponse> finalizarAtendimento(@PathVariable Long id) {
-        return atendimentoRepository.findById(id)
-                .map(atendimento -> {
-                    atendimento.finalizar();
-                    return ResponseEntity.ok(AtendimentoResponse.of(atendimento));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
 
-    @GetMapping("listar")
+
+    @GetMapping
     public ResponseEntity<List<AtendimentoResponse>> listarAtendimento() {
         List<Atendimento> atendimentos = atendimentoRepository.findAll();
         List<AtendimentoResponse> responseList = atendimentos.stream()
@@ -47,24 +39,19 @@ public class AtendimentoController {
         return ResponseEntity.ok(responseList);
     }
 
-    @PatchMapping("editar/{atendimentoId}")
-    public ResponseEntity<AtendimentoResponse> editarAtendimento(@PathVariable Long atendimentoId, @RequestBody AtendimentoRequest atendimentoRequest) {
-        AtendimentoResponse atendimentoResponse = atendimentoService.editarAtendimento(atendimentoId, atendimentoRequest);
-        if (atendimentoResponse != null) {
-            return ResponseEntity.ok(atendimentoResponse);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PatchMapping("/{id}/editar")
+    public ResponseEntity<AtendimentoResponse> editarAtendimento(@PathVariable Long id, @RequestBody AtendimentoRequest atendimentoRequest) {
+        ResponseEntity<AtendimentoResponse> responseEntity = atendimentoService.editarAtendimento(id, atendimentoRequest);
+        return responseEntity;
     }
 
 
-    @PostMapping("{id}/produtos")
+    @PostMapping(path = "/{id}/produtos")
     public void adicionarProdutos(@RequestBody AdicionarProdutoRequest adicionarProdutoRequest) {
 
     }
 
-// Testar
-@DeleteMapping("/remover{atendimentoId}/{produtoId}")
+@DeleteMapping(path = "/{id}")
 public ResponseEntity<Void> removerProdutoDoAtendimento(@PathVariable Long atendimentoId, @PathVariable Long produtoId) {
     Optional<Atendimento> optionalAtendimento = atendimentoRepository.findById(atendimentoId);
 
@@ -77,12 +64,20 @@ public ResponseEntity<Void> removerProdutoDoAtendimento(@PathVariable Long atend
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
-    @PostMapping("/adicionarPagamento/{atendimentoId}")
+    @PostMapping(path = "/{id}/pagamento")
     public ResponseEntity<Void> adicionarPagamentoAoAtendimento(@PathVariable Long atendimentoId, @RequestBody Pagamento pagamento) {
         atendimentoService.adicionarPagamento(atendimentoId, pagamento);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
+    @PostMapping(path = "/{id}")
+    public ResponseEntity<AtendimentoResponse> finalizarAtendimento(@PathVariable Long id) {
+        return atendimentoRepository.findById(id)
+                .map(atendimento -> {
+                    atendimento.finalizar();
+                    return ResponseEntity.ok(AtendimentoResponse.of(atendimento));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
 
 

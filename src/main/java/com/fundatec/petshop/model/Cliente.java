@@ -24,9 +24,10 @@ public class Cliente {
     @Column(length = 20, nullable = false)
     private String cpf;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
     private List<Endereco> enderecos;
 
-    @Column(name = "endereco_id")
-    private Long enderecoId;
+
+
 }

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Data
@@ -18,6 +20,12 @@ public class EnderecoResponse {
     private String cidade;
     private String estado;
 
+    public static List<EnderecoResponse> of(List<Endereco> endereco) {
+        return endereco.stream()
+                .map(EnderecoResponse::of)
+                .toList();
+    }
+
     public static EnderecoResponse of(Endereco endereco) {
         return EnderecoResponse.builder()
                 .id(endereco.getId())
@@ -25,7 +33,6 @@ public class EnderecoResponse {
                 .cidade(endereco.getCidade())
                 .numero(endereco.getNumero())
                 .logradouro(endereco.getLogradouro())
-                .estado(endereco.getEstado())
                 .build();
     }
 }
