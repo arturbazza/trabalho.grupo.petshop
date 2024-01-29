@@ -281,7 +281,7 @@ public class ClienteService {
 
 Erro na inserção:
 
-java.lang.ClassCastException: class com.fundatec.petshop.controller.request.EnderecoRequest cannot be cast to class java.util.List (com.fundatec.petshop.controller.request.EnderecoRequest is in unnamed module of loader 'app'; java.util.List is in module java.base of loader 'bootstrap')
+java.lang.ClassCastException: class org.hibernate.collection.spi.PersistentBag cannot be cast to class com.fundatec.petshop.model.Endereco (org.hibernate.collection.spi.PersistentBag and com.fundatec.petshop.model.Endereco are in unnamed module of loader 'app')
 
 
 Mande-me os arquivos corrigidos completos e comentada as linhas com a correção. 
