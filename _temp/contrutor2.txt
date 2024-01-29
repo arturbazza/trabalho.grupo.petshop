@@ -1,0 +1,510 @@
+em português do brasil
+
+Preciso de ajuda!
+
+Aqui estão as classes que moldam o projeto "trabalho.grupo.petshop":
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Setter
+@Data
+@Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "atendimentos")
+public class Atendimento {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long atendimentoId;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date data;
+
+    @Column(length = 10, nullable = false)
+    private String nomeAtendente;
+
+    @Column(nullable = false)
+    private String nomeVeterinario;
+
+    @Column(nullable = false)
+    private Boolean pagamentoEfetuado = false;
+
+    @Column(nullable = false)
+    private Integer valorConsulta;
+
+    private EstadoAtendimento estadoAtendimento;
+
+    public void finalizar() {
+        this.estadoAtendimento = EstadoAtendimento.FECHADO;
+    }
+
+
+    @ManyToOne
+    private Unidade unidade;
+
+    @ManyToOne
+    private Cliente cliente;
+
+    @ManyToOne
+    private Pet pet;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "atendimento_id")
+    @Builder.Default
+    private List<Produto> produtos = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "atendimento_id")
+    @Builder.Default
+    private List<Pagamento> pagamentos = new ArrayList<>();
+
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "atendimento_produto")
+public class AtendimentoProduto {
+    @EmbeddedId
+    private AtendimentoProdutoId id;
+
+    @Column(nullable = false)
+    private int quantidade;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime dataEntrada;
+
+    @ManyToOne
+    @MapsId("atendimentoId")
+    @JoinColumn(name = "atendimentoId", referencedColumnName = "atendimentoId")
+    private Atendimento atendimento;
+
+    @ManyToOne
+    @MapsId("produtoId")
+    @JoinColumn(name = "produtoId", referencedColumnName = "produtoId")
+    private Produto produto;
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.Column;
+
+public class AtendimentoProdutoId {
+    @Column(name= "produtoId")
+    private Long produtoId;
+
+    @Column(name = "atendimentoId")
+    private Long atendimentoId;
+}
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@Setter
+@Getter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "clientes")
+public class Cliente {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20, nullable = false)
+    private String nome;
+
+    @Column(length = 20, nullable = false)
+    private String cpf;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private List<Endereco> enderecos;
+
+    @Column(name = "endereco_id")
+    private Long enderecoId;
+}
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Setter
+@Getter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "enderecos")
+public class Endereco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
+    private String logradouro;
+
+    @Column
+    private Long numero;
+
+    @Column
+    private String bairro;
+
+    @Column
+    private String cidade;
+
+    @Column
+    private String estado;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+}
+
+package com.fundatec.petshop.model;
+
+public enum EstadoAtendimento {
+    FECHADO,ABERTO;
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import java.util.Date;
+
+@Setter
+@Getter
+@Entity
+@Table(name = "estoques")
+public class Estoque {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataOperacao;
+
+    private TipoOperacao tipoOperacao;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date validade;
+
+    @Column(length = 100,nullable = false)
+    private String lote;
+
+@ManyToOne
+    private Produto produto;
+}
+
+
+package com.fundatec.petshop.model;
+
+public enum FormaPagamento {
+    CARTAO,PIX,DINHEIRO;
+}
+package com.fundatec.petshop.model;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Table(name = "mamiferos")
+public class Mamifero  extends TipoAnimal{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20,nullable = false)
+    private String raca;
+
+    @Column(nullable = false)
+    private Boolean possuePelos;
+
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "pagamento")
+public class Pagamento {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "valorPago")
+    private Integer valorPago;
+
+    @Column(name = "datapagamento")
+    @Temporal(TemporalType.DATE)
+    private Date datapagamento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "forma_pagamento")
+    private FormaPagamento formaPagamento;
+
+    @ManyToOne
+    @JoinColumn(name = "atendimento_id")
+    private Atendimento atendimento;
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "peixe")
+public class Peixe extends TipoAnimal{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20,nullable = false)
+    private String tipoAgua;
+
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+@Getter
+@Setter
+@Entity
+@Table(name = "pet")
+public class Pet {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20,nullable = false)
+    private String nome ;
+
+    @Column(length = 20,nullable = false)
+    private Integer idade;
+
+    @OneToOne
+    private Cliente cliente;
+
+    @ManyToOne
+    private TipoAnimal tipoAnimal ;
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@Entity
+@Table(name = "produtos")
+public class Produto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long produtoId;
+
+    @Column
+    private String nome;
+
+    @Column
+    private Integer valor;
+
+    @Column
+    private String descricao;
+
+    @Column
+    private Integer quantidadeAtual;
+
+    @ManyToOne
+    private TipoAnimal tipoAnimal;
+
+
+}
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@Entity
+@Table(name = "produtos")
+public class Produto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long produtoId;
+
+    @Column
+    private String nome;
+
+    @Column
+    private Integer valor;
+
+    @Column
+    private String descricao;
+
+    @Column
+    private Integer quantidadeAtual;
+
+    @ManyToOne
+    private TipoAnimal tipoAnimal;
+
+
+}
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "reptil")
+
+public class Repitil  extends TipoAnimal{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 20,nullable = false)
+    private String peconhento;
+
+}
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "tipo_animal")
+@Inheritance(strategy = InheritanceType.JOINED)
+public class TipoAnimal {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 50,nullable = false)
+    private String especies;
+
+}
+package com.fundatec.petshop.model;
+
+public enum TipoOperacao {
+    ENTRADA, SAIDA;
+}
+
+package com.fundatec.petshop.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "unidades")
+public class Unidade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, length = 10)
+    private String nome;
+
+    @ManyToOne
+    private Endereco endereco;
+
+}
+package com.fundatec.petshop.model;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.Date;
+@Getter
+@Setter
+@Entity
+@Table(name = "vacinas")
+public class Vacina {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 50, nullable = false)
+    private String nome;
+
+    @Temporal(TemporalType.DATE)
+    private LocalDate validade;
+
+    @Column(length = 50, nullable = false)
+    private String doencasAplicaveis;
+
+
+    @ManyToOne
+    private Mamifero mamifero;
+}
+
+
+Erro:
+
+
+Erro na inserção:
+
+java.lang.ClassCastException: class org.hibernate.collection.spi.PersistentBag cannot be cast to class com.fundatec.petshop.model.Endereco (org.hibernate.collection.spi.PersistentBag and com.fundatec.petshop.model.Endereco are in unnamed module of loader 'app')
+
+
+Mande-me os arquivos corrigidos completos e comentada as linhas com a correção. 
+
