@@ -32,9 +32,10 @@ public class ProdutoService {
     public void editProduto(Long produtoId, Produto produto) {
         Produto existingProduto = produtoRepository.findById(produtoId)
                 .orElseThrow(() -> new RuntimeException(getProdutoNaoExisteMessage(produtoId)));
-
+        existingProduto.setNome(produto.getNome());
         existingProduto.setDescricao(produto.getDescricao());
         existingProduto.setValor(produto.getValor());
+        existingProduto.setQuantidadeAtual(produto.getQuantidadeAtual());
 
         produtoRepository.save(existingProduto);
     }
