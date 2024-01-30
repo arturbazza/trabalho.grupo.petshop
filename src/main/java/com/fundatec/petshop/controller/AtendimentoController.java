@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +25,11 @@ public class AtendimentoController {
     private final AtendimentoService atendimentoService;
 
     @PostMapping
-    public String abrirAtendimento(@RequestBody @Valid AtendimentoRequest atendimentoRequest) {
-        atendimentoService.abrirAtendimento(atendimentoRequest.toModel());
-        return "Atendimento aberto com sucesso!";
+    public ResponseEntity<Void> abrirAtendimento(@RequestBody AtendimentoRequest atendimentoRequest) {
+        Atendimento atendimento = atendimentoRequest.toModel();
+        atendimentoService.abrirAtendimento(atendimento);
+        return ResponseEntity.created(URI.create("/atendimentos/" + atendimento.getAtendimentoId())).build();
+        //return "Atendimento aberto com sucesso!";
     }
 
 
